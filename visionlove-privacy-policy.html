@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>VisionLove — Privacy Policy</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap');
+
+  :root{
+    --paper:#FAF6F0;
+    --panel:#FFFFFF;
+    --ink:#241E22;
+    --ink-soft:#6B6169;
+    --rose:#B84B5E;
+    --rose-dark:#93394A;
+    --rose-tint:#F5E2E4;
+    --line:#E9DFD9;
+    --shadow:0 10px 28px rgba(36,30,34,0.08);
+  }
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    line-height:1.65;
+  }
+
+  /* ---------- header ---------- */
+  .hero{
+    padding:64px 24px 40px;
+    text-align:center;
+    border-bottom:1px solid var(--line);
+    background:
+      radial-gradient(ellipse at top, rgba(184,75,94,0.06), transparent 60%),
+      var(--paper);
+  }
+  .mark{
+    width:52px;height:52px;border-radius:16px;
+    background:var(--rose);
+    display:flex;align-items:center;justify-content:center;
+    margin:0 auto 18px;
+    color:#fff; font-family:'Fraunces',serif; font-weight:700; font-size:22px;
+    transform:rotate(-4deg);
+    box-shadow:0 8px 18px rgba(184,75,94,0.3);
+  }
+  .hero h1{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:clamp(30px,5vw,44px);
+    margin:0 0 10px;
+    letter-spacing:-0.01em;
+  }
+  .hero .updated{
+    font-size:13.5px;
+    color:var(--ink-soft);
+    background:var(--rose-tint);
+    display:inline-block;
+    padding:6px 14px;
+    border-radius:20px;
+    font-weight:600;
+  }
+
+  /* ---------- layout ---------- */
+  .layout{
+    max-width:1040px;
+    margin:0 auto;
+    display:grid;
+    grid-template-columns:240px 1fr;
+    gap:48px;
+    padding:44px 24px 100px;
+    align-items:start;
+  }
+  @media (max-width:820px){
+    .layout{ grid-template-columns:1fr; }
+    .toc{ position:static !important; order:2; }
+    .content{ order:1; }
+  }
+
+  .toc{
+    position:sticky;
+    top:32px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:20px 18px;
+    box-shadow:var(--shadow);
+  }
+  .toc .label{
+    font-size:11px; font-weight:700; letter-spacing:0.03em;
+    color:var(--rose); text-transform:uppercase;
+    margin:0 0 12px 2px;
+  }
+  .toc ol{ list-style:none; margin:0; padding:0; counter-reset:toc; }
+  .toc li{ counter-increment:toc; margin-bottom:2px; }
+  .toc a{
+    display:flex; gap:8px;
+    text-decoration:none;
+    color:var(--ink-soft);
+    font-size:13px;
+    font-weight:500;
+    padding:7px 8px;
+    border-radius:8px;
+  }
+  .toc a::before{
+    content:counter(toc, decimal-leading-zero);
+    color:#C9BDB3;
+    font-variant-numeric:tabular-nums;
+    font-size:11.5px;
+    padding-top:1px;
+  }
+  .toc a:hover{ background:var(--rose-tint); color:var(--rose-dark); }
+
+  /* ---------- content ---------- */
+  .content{ min-width:0; }
+  .lede{
+    font-size:15px;
+    color:var(--ink-soft);
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-left:4px solid var(--rose);
+    border-radius:4px 14px 14px 4px;
+    padding:18px 20px;
+    margin:0 0 36px;
+  }
+  .lede p{ margin:0 0 10px; }
+  .lede p:last-child{ margin-bottom:0; }
+
+  section{
+    padding:28px 0;
+    border-bottom:1px solid var(--line);
+    scroll-margin-top:24px;
+  }
+  section:last-of-type{ border-bottom:none; }
+  section h2{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:22px;
+    margin:0 0 6px;
+    display:flex; align-items:baseline; gap:10px;
+  }
+  section h2 .n{
+    font-size:13px; color:var(--rose); font-weight:700; font-family:'Inter',sans-serif;
+  }
+  section h3{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:16.5px;
+    margin:22px 0 8px;
+  }
+  section p{ margin:10px 0; max-width:74ch; color:var(--ink); }
+  section ul{ margin:10px 0; padding-left:20px; max-width:74ch; }
+  section li{ margin:6px 0; }
+  .muted{ color:var(--ink-soft); }
+
+  .term{
+    background:var(--rose-tint);
+    color:var(--rose-dark);
+    padding:1px 6px;
+    border-radius:5px;
+    font-weight:600;
+    font-size:0.95em;
+  }
+
+  .card-row{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:16px 0; }
+  @media (max-width:520px){ .card-row{ grid-template-columns:1fr; } }
+  .mini-card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:16px 18px;
+  }
+  .mini-card .k{ font-weight:700; font-size:13.5px; margin-bottom:4px; }
+  .mini-card .v{ font-size:12.5px; color:var(--ink-soft); line-height:1.55; }
+
+  .retention-table{
+    width:100%;
+    border-collapse:collapse;
+    margin:14px 0 6px;
+    font-size:13px;
+  }
+  .retention-table th{
+    text-align:left;
+    font-size:11px; text-transform:uppercase; letter-spacing:0.03em;
+    color:var(--ink-soft); font-weight:700;
+    padding:8px 10px;
+    border-bottom:2px solid var(--line);
+  }
+  .retention-table td{
+    padding:10px 10px;
+    border-bottom:1px solid var(--line);
+    vertical-align:top;
+  }
+  .retention-table td:first-child{ font-weight:600; white-space:nowrap; }
+
+  .contact-card{
+    margin-top:8px;
+    background:var(--ink);
+    color:#fff;
+    border-radius:18px;
+    padding:26px 26px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    flex-wrap:wrap;
+  }
+  .contact-card h3{ font-family:'Fraunces',serif; margin:0 0 4px; font-size:18px; color:#fff; }
+  .contact-card p{ margin:0; font-size:13px; color:#D8CFC9; }
+  .contact-card a{
+    background:var(--rose);
+    color:#fff;
+    text-decoration:none;
+    font-weight:700;
+    font-size:13.5px;
+    padding:11px 20px;
+    border-radius:30px;
+    flex-shrink:0;
+  }
+
+  .top-link{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:12px;
+    color:var(--ink-soft);
+    text-decoration:none;
+    margin-top:26px;
+  }
+  .top-link:hover{ color:var(--rose); }
+
+  footer{
+    text-align:center;
+    padding:30px 20px 50px;
+    font-size:12px;
+    color:#a89b93;
+  }
+</style>
+</head>
+<body>
+
+  <div class="hero" id="top">
+    <div class="mark">V</div>
+    <h1>Privacy Policy</h1>
+    <div class="updated">Last updated · September 8, 2026</div>
+  </div>
+
+  <div class="layout">
+    <nav class="toc" aria-label="Table of contents">
+      <p class="label">On this page</p>
+      <ol>
+        <li><a href="#definitions">Definitions</a></li>
+        <li><a href="#collecting">Data we collect</a></li>
+        <li><a href="#tracking">Cookies &amp; tracking</a></li>
+        <li><a href="#use">How we use your data</a></li>
+        <li><a href="#sharing">When we share it</a></li>
+        <li><a href="#sms">Text message notice</a></li>
+        <li><a href="#retention">Retention periods</a></li>
+        <li><a href="#transfer">International transfers</a></li>
+        <li><a href="#delete">Deleting your data</a></li>
+        <li><a href="#disclosure">Legal disclosure</a></li>
+        <li><a href="#security">Security</a></li>
+        <li><a href="#children">Children's privacy</a></li>
+        <li><a href="#links">Third-party links</a></li>
+        <li><a href="#changes">Policy changes</a></li>
+        <li><a href="#contact">Contact us</a></li>
+      </ol>
+    </nav>
+
+    <div class="content">
+
+      <div class="lede">
+        <p>This Privacy Policy describes how VisionLove ("the Company," "We," "Us," "Our") collects, uses, and discloses your information, and explains your privacy rights, whenever you use the VisionLove application (the "Service").</p>
+        <p>We only process your Personal Data where We have a valid legal basis to do so — including your consent, where consent is required by law.</p>
+      </div>
+
+      <section id="definitions">
+        <h2><span class="n">01</span>Definitions</h2>
+        <p class="muted">Capitalized terms carry the meanings below, in singular or plural, wherever they appear in this policy.</p>
+        <div class="card-row">
+          <div class="mini-card"><div class="k">Account</div><div class="v">A unique account created for you to access the Service.</div></div>
+          <div class="mini-card"><div class="k">Application / Service</div><div class="v">VisionLove, the software program provided by the Company.</div></div>
+          <div class="mini-card"><div class="k">Personal Data</div><div class="v">Any information relating to an identified or identifiable individual. Used interchangeably with "Personal Information."</div></div>
+          <div class="mini-card"><div class="k">Usage Data</div><div class="v">Data collected automatically from use of the Service or its infrastructure — for example, the duration of a page visit.</div></div>
+          <div class="mini-card"><div class="k">Service Provider</div><div class="v">A third-party person or company that processes data on the Company's behalf to help operate, provide, or improve the Service.</div></div>
+          <div class="mini-card"><div class="k">Affiliate</div><div class="v">An entity that controls, is controlled by, or shares common control with a party — meaning 50%+ ownership of voting shares or equivalent authority.</div></div>
+        </div>
+        <p class="muted">Country/State of operation: Maharashtra, India.</p>
+      </section>
+
+      <section id="collecting">
+        <h2><span class="n">02</span>Data we collect</h2>
+        <h3>Personal Data</h3>
+        <p>While using the Service, we may ask you to provide personally identifiable information that can be used to contact or identify you, including:</p>
+        <ul><li>Email address</li></ul>
+        <h3>Usage Data</h3>
+        <p>Usage Data is collected automatically and may include the pages of the Service you visit, the time and date of your visit, time spent on those pages and other diagnostic data.</p>
+     </section>
+
+      <section id="tracking">
+        <h2><span class="n">03</span>Cookies &amp; tracking technologies</h2>
+        <p>We use tracking technologies such as <span class="term">cookies</span> to track activity on the Service and to improve it over time.</p>
+      </section>
+
+      <section id="use">
+        <h2><span class="n">04</span>How we use your data</h2>
+        <ul>
+          <li><strong>To provide and maintain the Service</strong>, including monitoring how it's used.</li>
+          <li><strong>To manage your Account</strong> and the registration that gives you access to different features.</li>
+          <li><strong>To perform a contract</strong> — developing, complying with, and fulfilling any purchase or other agreement made through the Service.</li>
+          <li><strong>To contact you</strong> by email, phone, SMS, or push notification about updates, security alerts, or other informative communications.</li>
+          <li><strong>To send news and offers</strong> about goods, services, and events similar to ones you've already used or asked about — with your consent where the law requires it, and always with an easy way to opt out.</li>
+          <li><strong>To manage your requests</strong> to us.</li>
+          <li><strong>For other purposes</strong>, including data analysis, identifying usage trends, and evaluating or improving the Service, our marketing, and your experience.</li>
+        </ul>
+      </section>
+
+      <section id="sharing">
+        <h2><span class="n">05</span>When we share your data</h2>
+        <ul>
+          <li><strong>With Service Providers</strong>, to monitor and analyze use of the Service and to contact you.</li>
+          <li><strong>With Affiliates</strong>, who are required to honor this Privacy Policy.</li>
+        </ul>
+      </section>
+
+      <section id="sms">
+        <h2><span class="n">06</span>Text message (SMS) notice</h2>
+        <p>If you opt in to text messages, we collect and store your phone number, the date and method of your consent, and message delivery/read information. This information is <strong>never sold or shared</strong> with third parties or affiliates for marketing purposes — only with the Service Providers technically required to deliver the texts.</p>
+        <p>Consenting to SMS is never a condition of using the Service. Messages you may receive relate to:</p>
+        <ul>
+          <li>Customer care and support</li>
+          <li>Account notifications (activity, status, renewals)</li>
+          <li>Authentication messages (OTPs, passcodes)</li>
+        </ul>
+        <p class="muted">Reply <strong>STOP</strong> to opt out, or <strong>HELP</strong> for support. Message and data rates may apply; frequency varies. Carriers aren't liable for delayed or undelivered messages.</p>
+      </section>
+
+
+
+      <section id="delete">
+        <h2><span class="n">09</span>Deleting your data</h2>
+        <p>You can delete or request deletion of the Personal Data we hold about you. Some of this can be done directly in your Account settings; for anything else, contact us to access, correct, or delete your information.</p>
+      </section>
+
+
+      <section id="security">
+        <h2><span class="n">11</span>Security</h2>
+        <p>We take the security of your Personal Data seriously and use commercially reasonable measures to protect it. That said, no method of transmission over the internet or electronic storage is 100% secure, and we can't guarantee absolute security.</p>
+      </section>
+
+      <section id="children">
+        <h2><span class="n">12</span>Children's and minors' privacy</h2>
+        <p>The Service is not directed at anyone under 13, and we don't knowingly collect Personal Information from children under that age. If you're a parent or guardian and believe your child has given us Personal Information, please contact us — we'll remove it as soon as reasonably possible.</p>
+        <p>Where a jurisdiction sets a higher age of consent than 13 and we rely on consent as our legal basis, we'll seek a parent or guardian's consent before collecting or using that user's Personal Information.</p>
+      </section>
+
+      <section id="links">
+        <h2><span class="n">13</span>Third-party links</h2>
+        <p>The Service may link to other websites we don't operate. We recommend reviewing the privacy policy of any third-party site you visit — we have no control over, and take no responsibility for, their content or practices.</p>
+      </section>
+
+      <section id="changes">
+        <h2><span class="n">14</span>Changes to this policy</h2>
+        <p>We may update this Privacy Policy from time to time. We'll post the new version here, notify you by email and/or a prominent notice within the Service before the change takes effect, and update the "Last updated" date above. Please check back periodically.</p>
+      </section>
+
+      <section id="contact">
+        <h2><span class="n">15</span>Contact us</h2>
+        <p>Questions about this Privacy Policy are always welcome.</p>
+        <div class="contact-card">
+          <div>
+            <h3>Get in touch</h3>
+            <p>siya.develop@gmail.com</p>
+          </div>
+          <a href="mailto:siya.develop@gmail.com">Email us</a>
+        </div>
+        <a class="top-link" href="#top">↑ Back to top</a>
+      </section>
+
+    </div>
+  </div>
+
+  <footer>VisionLove · Privacy Policy · Effective September 8, 2026</footer>
+
+</body>
+</html>

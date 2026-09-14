@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>VisionLove — Prototype</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap');
+
+  :root{
+    --paper:#F5EFE2;
+    --outer:#EAE2D2;
+    --ink:#221E19;
+    --ink-soft:#5B5347;
+    --pin:#D8432E;
+    --pin-dark:#B7331F;
+    --teal:#2B6E67;
+    --teal-dark:#1E514C;
+    --gold:#C89B3C;
+    --card:#FFFFFF;
+    --line:#E1D8C4;
+    --shadow: 0 10px 24px rgba(34,30,25,0.14);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--outer);
+    font-family:'Inter',sans-serif;
+    color:var(--ink);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:18px;
+    padding:28px 12px 60px;
+  }
+
+  /* ---------- top strip ---------- */
+  .rig-title{
+    font-family:'Fraunces', serif;
+    font-size:22px;
+    font-weight:600;
+    color:var(--ink);
+  }
+  .rig-sub{
+    font-size:13px;
+    color:var(--ink-soft);
+    margin-top:-10px;
+    max-width:520px;
+    text-align:center;
+    line-height:1.5;
+  }
+  .jump{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    justify-content:center;
+    max-width:520px;
+  }
+  .jump button{
+    font-family:'Inter',sans-serif;
+    font-size:12px;
+    font-weight:600;
+    padding:7px 12px;
+    border-radius:20px;
+    border:1px solid var(--line);
+    background:var(--card);
+    color:var(--ink-soft);
+    cursor:pointer;
+  }
+  .jump button:hover{ border-color:var(--pin); color:var(--pin); }
+
+  /* ---------- phone frame ---------- */
+  .phone{
+    width:390px;
+    height:844px;
+    background:var(--ink);
+    border-radius:52px;
+    padding:14px;
+    box-shadow: var(--shadow);
+    position:relative;
+    flex-shrink:0;
+  }
+  .notch{
+    position:absolute;
+    top:14px; left:50%; transform:translateX(-50%);
+    width:120px; height:26px;
+    background:var(--ink);
+    border-radius:0 0 16px 16px;
+    z-index:50;
+  }
+  .screen{
+    width:100%; height:100%;
+    background:var(--paper);
+    border-radius:38px;
+    overflow:hidden;
+    position:relative;
+    display:flex;
+    flex-direction:column;
+  }
+
+  .view{
+    position:absolute; inset:0;
+    display:none;
+    flex-direction:column;
+    background:var(--paper);
+  }
+  .view.active{ display:flex; }
+
+  /* ---------- shared bits ---------- */
+  .statusbar{
+    height:30px;
+    flex-shrink:0;
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    padding-bottom:4px;
+    font-size:12px;
+    font-weight:600;
+    color:var(--ink);
+  }
+  .topbar{
+    padding:6px 20px 14px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-shrink:0;
+    border-bottom:1px solid var(--line);
+    background:var(--paper);
+  }
+  .topbar h2{
+    font-family:'Fraunces', serif;
+    font-size:19px;
+    font-weight:600;
+    margin:0;
+    flex:1;
+  }
+  .backbtn{
+    width:30px; height:30px;
+    border-radius:50%;
+    border:1px solid var(--line);
+    background:var(--card);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    font-size:15px;
+    color:var(--ink);
+  }
+  .pill{
+    font-size:11px;
+    font-weight:700;
+    padding:5px 10px;
+    border-radius:20px;
+    border:none;
+    cursor:pointer;
+    background:var(--pin);
+    color:#fff;
+  }
+  .pill.ghost{ background:transparent; border:1px solid var(--line); color:var(--ink-soft); }
+  .scroll{ flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+
+  /* ---------- Welcome ---------- */
+  #view-welcome{ align-items:center; justify-content:center; text-align:center; padding:0 32px; gap:18px; }
+  .logo-mark{
+    width:64px; height:64px;
+    border-radius:20px;
+    background:var(--pin);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Fraunces', serif;
+    color:#fff; font-size:30px; font-weight:700;
+    transform:rotate(-4deg);
+    box-shadow: 0 8px 18px rgba(216,67,46,0.35);
+  }
+  .wordmark{ font-family:'Fraunces', serif; font-size:32px; font-weight:700; }
+  .tagline{ font-size:14.5px; color:var(--ink-soft); line-height:1.6; max-width:280px; }
+  .cta{
+    margin-top:10px;
+    width:100%;
+    padding:15px;
+    border-radius:14px;
+    border:none;
+    background:var(--ink);
+    color:#fff;
+    font-size:15px;
+    font-weight:600;
+    font-family:'Inter',sans-serif;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .cta.pinred{ background:var(--pin); }
+  .fineprint{ font-size:11px; color:#948a78; max-width:260px; }
+
+  /* ---------- OAuth ---------- */
+  #view-oauth{ background:#fff; }
+  .oauth-header{
+    background:var(--pin);
+    color:#fff;
+    padding:26px 24px 20px;
+    text-align:center;
+  }
+  .oauth-header .p-logo{ font-family:'Fraunces',serif; font-weight:700; font-size:20px; }
+  .oauth-body{ padding:26px 24px; flex:1; }
+  .oauth-body h3{ font-size:16px; font-family:'Fraunces',serif; margin:0 0 4px; }
+  .oauth-body p{ font-size:13px; color:var(--ink-soft); margin:0 0 20px; }
+  .perm{
+    display:flex; gap:10px; align-items:flex-start;
+    padding:12px 0;
+    border-bottom:1px solid var(--line);
+    font-size:13.5px;
+  }
+  .perm-dot{ width:7px; height:7px; border-radius:50%; background:var(--teal); margin-top:6px; flex-shrink:0; }
+  .oauth-actions{ padding:16px 24px 30px; display:flex; gap:10px; }
+  .oauth-actions button{ flex:1; padding:13px; border-radius:12px; font-weight:700; font-size:14px; cursor:pointer; border:none; }
+  .btn-cancel{ background:#F0ECE2; color:var(--ink-soft); }
+  .btn-allow{ background:var(--pin); color:#fff; }
+
+  /* ---------- Syncing ---------- */
+  #view-syncing{ align-items:center; justify-content:center; gap:18px; }
+  .spinner{
+    width:46px; height:46px;
+    border-radius:50%;
+    border:4px solid var(--line);
+    border-top-color:var(--pin);
+    animation:spin 0.9s linear infinite;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  .sync-text{ font-size:14px; color:var(--ink-soft); font-weight:500; }
+
+  /* ---------- Dashboard ---------- */
+  .board-list{ padding:14px 18px 100px; display:flex; flex-direction:column; gap:14px; }
+  .board-card{
+    background:var(--card);
+    border-radius:18px;
+    padding:14px;
+    display:flex;
+    gap:12px;
+    box-shadow:0 2px 8px rgba(34,30,25,0.06);
+    border:1px solid var(--line);
+    position:relative;
+    cursor:pointer;
+  }
+  .cover-stack{ position:relative; width:64px; height:64px; flex-shrink:0; }
+  .cover-stack img{
+    position:absolute; width:52px; height:52px; object-fit:cover;
+    border-radius:9px; border:2px solid #fff; box-shadow:0 3px 6px rgba(0,0,0,0.18);
+  }
+  .cover-stack img:nth-child(1){ top:0; left:0; transform:rotate(-8deg); z-index:1; }
+  .cover-stack img:nth-child(2){ top:2px; left:10px; transform:rotate(6deg); z-index:2; }
+  .cover-stack img:nth-child(3){ top:10px; left:4px; transform:rotate(-2deg); z-index:3; }
+  .board-info{ flex:1; display:flex; flex-direction:column; justify-content:center; gap:5px; }
+  .board-info .name{ font-family:'Fraunces', serif; font-size:16.5px; font-weight:600; }
+  .board-info .meta{ font-size:12px; color:var(--ink-soft); }
+  .cat-badge{
+    display:inline-flex; align-self:flex-start;
+    font-size:10.5px; font-weight:700;
+    padding:3px 9px; border-radius:20px;
+    margin-top:2px;
+  }
+  .cat-badge.vision{ background:#F3E6D9; color:var(--gold); }
+  .cat-badge.action{ background:#DEEAE8; color:var(--teal-dark); }
+  .cat-badge.utility{ background:#FBE2DC; color:var(--pin-dark); }
+  .setup-btn{
+    font-size:11.5px; font-weight:700; color:var(--pin);
+    background:none; border:none; padding:0; cursor:pointer; text-align:left;
+  }
+  .new-flag{
+    position:absolute; top:-7px; right:10px;
+    background:var(--gold); color:#fff;
+    font-size:10px; font-weight:800;
+    padding:3px 8px; border-radius:20px;
+    box-shadow:0 3px 6px rgba(0,0,0,0.2);
+  }
+  .dash-hero{ padding:20px 20px 4px; }
+  .dash-hero .hi{ font-family:'Fraunces', serif; font-size:24px; font-weight:600; }
+  .dash-hero .sub{ font-size:12.5px; color:var(--ink-soft); margin-top:2px; }
+  .sim-row{ padding:0 20px 6px; }
+  .sim-btn{
+    width:100%; padding:11px; border-radius:12px;
+    border:1px dashed #C6BCA4; background:transparent;
+    color:var(--ink-soft); font-size:12.5px; font-weight:600; cursor:pointer;
+  }
+
+  /* ---------- categorize modal ---------- */
+  .modal-backdrop{
+    position:absolute; inset:0; background:rgba(20,17,13,0.5);
+    display:none; align-items:flex-end; z-index:60;
+  }
+  .modal-backdrop.active{ display:flex; }
+  .modal-sheet{
+    background:var(--paper);
+    width:100%;
+    border-radius:26px 26px 0 0;
+    padding:22px 20px 28px;
+    display:flex; flex-direction:column; gap:12px;
+  }
+  .modal-sheet h3{ font-family:'Fraunces', serif; font-size:19px; margin:0 0 2px; }
+  .modal-sheet p.msub{ font-size:12.5px; color:var(--ink-soft); margin:0 0 6px; }
+  .opt{
+    display:flex; gap:12px; align-items:center;
+    background:var(--card); border:1px solid var(--line);
+    border-radius:14px; padding:12px 14px; cursor:pointer;
+  }
+  .opt:hover{ border-color:var(--pin); }
+  .opt .icon{
+    width:38px; height:38px; border-radius:10px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:18px; flex-shrink:0;
+  }
+  .opt.a .icon{ background:#F3E6D9; }
+  .opt.b .icon{ background:#DEEAE8; }
+  .opt.c .icon{ background:#FBE2DC; }
+  .opt .otext .t{ font-weight:700; font-size:13.5px; }
+  .opt .otext .d{ font-size:11.5px; color:var(--ink-soft); margin-top:1px; }
+  .modal-cancel{
+    text-align:center; font-size:13px; color:var(--ink-soft); padding:8px; cursor:pointer;
+  }
+
+  /* ---------- Vision board ---------- */
+  #view-vision .canvas-wrap{ flex:1; overflow:auto; position:relative; background:
+    radial-gradient(circle, #e6dcc4 1px, transparent 1px) 0 0/16px 16px, var(--paper); }
+  .canvas{ position:relative; width:900px; height:1100px; }
+  .vpin{
+    position:absolute;
+    width:132px;
+    background:#fff;
+    padding:6px 6px 20px;
+    border-radius:4px;
+    box-shadow:0 6px 14px rgba(0,0,0,0.22);
+    cursor:grab;
+    touch-action:none;
+    user-select:none;
+  }
+  .vpin:active{ cursor:grabbing; z-index:99; }
+  .vpin img{ width:100%; height:132px; object-fit:cover; border-radius:2px; display:block; }
+  .vpin .cap{ font-size:9.5px; margin-top:5px; color:var(--ink-soft); line-height:1.3; }
+  .vpin .tack{
+    position:absolute; top:-7px; left:50%; transform:translateX(-50%);
+    width:12px; height:12px; border-radius:50%;
+    background:var(--pin);
+    box-shadow:0 2px 3px rgba(0,0,0,0.35);
+  }
+
+  /* ---------- Kanban ---------- */
+  .kanban{ flex:1; display:flex; gap:10px; padding:14px 12px; overflow-x:auto; }
+  .kcol{
+    background:#EFE7D6; border-radius:16px;
+    min-width:190px; width:190px; flex-shrink:0;
+    display:flex; flex-direction:column; padding:10px;
+    max-height:100%;
+  }
+  .kcol h4{
+    font-size:11.5px; text-transform:uppercase; letter-spacing:0.04em;
+    font-weight:800; color:var(--ink-soft); margin:2px 4px 10px;
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .kcol .count{ background:var(--card); border-radius:20px; padding:1px 7px; font-size:10.5px; }
+  .kcol-body{ flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:8px; min-height:60px; }
+  .kcard{
+    background:var(--card); border-radius:12px; overflow:hidden;
+    box-shadow:0 2px 6px rgba(0,0,0,0.08);
+    cursor:grab;
+  }
+  .kcard img{ width:100%; height:86px; object-fit:cover; display:block; }
+  .kcard .kt{ padding:8px 9px 10px; font-size:11.5px; font-weight:600; line-height:1.3; }
+  .kcol-body.dragover{ background:rgba(43,110,103,0.08); border-radius:10px; }
+
+  /* ---------- Utility / recipe grid ---------- */
+  .recipe-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:14px 16px 110px; }
+  .rcard{ background:var(--card); border-radius:16px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.08); }
+  .rcard img{ width:100%; height:96px; object-fit:cover; display:block; }
+  .rcard .rt{ padding:9px 10px 4px; font-size:12.5px; font-weight:700; line-height:1.3; }
+  .rcard .ing{ padding:0 10px; font-size:10px; color:var(--ink-soft); line-height:1.5; min-height:30px; }
+  .rcard .addbtn{
+    margin:8px 10px 10px; padding:8px; border-radius:10px; border:none;
+    background:var(--pin); color:#fff; font-size:11px; font-weight:700; cursor:pointer; width:calc(100% - 20px);
+  }
+  .rcard .addbtn.added{ background:#DEEAE8; color:var(--teal-dark); }
+  .fab{
+    position:absolute; right:18px; bottom:22px;
+    background:var(--ink); color:#fff; border:none;
+    padding:13px 18px; border-radius:30px;
+    font-size:12.5px; font-weight:700; cursor:pointer;
+    box-shadow:0 8px 16px rgba(0,0,0,0.25);
+    display:flex; align-items:center; gap:6px;
+    z-index:40;
+  }
+  .grocery-sheet{
+    position:absolute; left:0; right:0; bottom:0;
+    background:var(--paper); border-radius:22px 22px 0 0;
+    padding:18px 20px 26px;
+    transform:translateY(110%);
+    transition:transform .28s ease;
+    box-shadow:0 -8px 20px rgba(0,0,0,0.2);
+    max-height:64%;
+    display:flex; flex-direction:column;
+    z-index:45;
+  }
+  .grocery-sheet.open{ transform:translateY(0); }
+  .grocery-sheet h4{ font-family:'Fraunces',serif; font-size:17px; margin:0 0 10px; display:flex; justify-content:space-between; align-items:center; }
+  .glist{ overflow-y:auto; display:flex; flex-direction:column; gap:2px; }
+  .gitem{ display:flex; align-items:center; gap:10px; padding:9px 2px; border-bottom:1px solid var(--line); font-size:13px; }
+  .gitem input{ width:16px; height:16px; accent-color:var(--pin); }
+  .gitem.checked span{ text-decoration:line-through; color:#a89f8d; }
+  .gclose{ font-size:12px; color:var(--ink-soft); text-align:center; margin-top:10px; cursor:pointer; }
+  .empty-groc{ font-size:12.5px; color:var(--ink-soft); padding:16px 2px; }
+
+  /* ---------- New arrivals tray ---------- */
+  .tray{
+    background:#fff;
+    border-top:1px solid var(--line);
+    padding:10px 12px 12px;
+    display:none;
+    flex-shrink:0;
+  }
+  .tray.show{ display:block; }
+  .tray-head{ display:flex; align-items:center; gap:6px; font-size:11.5px; font-weight:700; color:var(--gold); margin-bottom:8px; padding-left:2px; }
+  .tray-dot{ width:7px;height:7px;border-radius:50%; background:var(--gold); box-shadow:0 0 0 3px rgba(200,155,60,0.25); }
+  .tray-strip{ display:flex; gap:10px; overflow-x:auto; padding-bottom:2px; }
+  .tpin{
+    width:78px; flex-shrink:0; background:#fff; border:1px solid var(--line);
+    border-radius:10px; overflow:hidden; box-shadow:0 3px 8px rgba(0,0,0,0.1);
+    cursor:grab; touch-action:none; user-select:none;
+  }
+  .tpin img{ width:100%; height:64px; object-fit:cover; display:block; }
+  .tpin .tc{ font-size:9px; padding:4px 5px 6px; line-height:1.25; color:var(--ink-soft); }
+  .tray-hint{ font-size:10.5px; color:#a89f8d; padding:8px 2px 0; text-align:center; }
+
+  /* toast */
+  .toast{
+    position:absolute; top:14px; left:50%; transform:translateX(-50%) translateY(-140%);
+    background:var(--ink); color:#fff; font-size:12.5px; font-weight:600;
+    padding:10px 16px; border-radius:30px; z-index:80;
+    transition:transform .3s ease; white-space:nowrap;
+    box-shadow:0 8px 18px rgba(0,0,0,0.3);
+  }
+  .toast.show{ transform:translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+  <div class="rig-title">VisionLove — action layer for Pinterest</div>
+  <div class="rig-sub">Click through the prototype below like a real phone. Drag pins on the Vision Board, drag cards between Kanban columns, and try the sync + grocery-list flows.</div>
+  <div class="jump">
+    <button onclick="showView('welcome')">Welcome</button>
+    <button onclick="showView('dashboard')">Dashboard</button>
+    <button onclick="openBoard('kitchen')">Kanban — Kitchen Reno</button>
+    <button onclick="openBoard('vegan')">Utility — Vegan Dinners</button>
+    <button onclick="openBoard('goals')">Vision — 2026 Goals</button>
+    <button onclick="openCategorize('decor')">Categorize — Home Decor Finds</button>
+  </div>
+
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="screen">
+
+      <!-- WELCOME -->
+      <div class="view active" id="view-welcome">
+        <div class="logo-mark">P</div>
+        <div class="wordmark">VisionLove</div>
+        <div class="tagline">Turn the boards you already save into moodboards, project trackers, and grocery lists — automatically.</div>
+        <button class="cta pinred" onclick="showView('oauth')">Connect with Pinterest</button>
+        <div class="fineprint">We only read your profile, boards, and pins. Nothing is posted on your behalf.</div>
+      </div>
+
+      <!-- OAUTH -->
+      <div class="view" id="view-oauth">
+        <div class="oauth-header">
+          <div class="p-logo">Pinterest</div>
+        </div>
+        <div class="oauth-body">
+          <h3>VisionLove would like to access your account</h3>
+          <p>oauth2.pinterest.com/authorize</p>
+          <div class="perm"><div class="perm-dot"></div><div>Read your public profile</div></div>
+          <div class="perm"><div class="perm-dot"></div><div>Read your boards and board sections</div></div>
+          <div class="perm"><div class="perm-dot"></div><div>Read pins saved to your boards</div></div>
+        </div>
+        <div class="oauth-actions">
+          <button class="btn-cancel" onclick="showView('welcome')">Cancel</button>
+          <button class="btn-allow" onclick="startSync()">Allow</button>
+        </div>
+      </div>
+
+      <!-- SYNCING -->
+      <div class="view" id="view-syncing">
+        <div class="spinner"></div>
+        <div class="sync-text" id="sync-label">Pulling your boards…</div>
+      </div>
+
+      <!-- DASHBOARD -->
+      <div class="view" id="view-dashboard">
+        <div class="dash-hero">
+          <div class="hi">Your boards</div>
+          <div class="sub">Imported from Pinterest · tap a board to set it up</div>
+        </div>
+        <div class="sim-row">
+          <button class="sim-btn" onclick="simulateSync()">↻ Simulate Pinterest sync (saves 3 new pins overnight)</button>
+        </div>
+        <div class="scroll"><div class="board-list" id="board-list"></div></div>
+      </div>
+
+      <!-- VISION BOARD -->
+      <div class="view" id="view-vision">
+        <div class="topbar">
+          <div class="backbtn" onclick="showView('dashboard')">←</div>
+          <h2 id="vision-title">Vision Board</h2>
+          <button class="pill ghost" onclick="toggleTray('vision')">Tray</button>
+        </div>
+        <div class="canvas-wrap"><div class="canvas" id="vision-canvas"></div></div>
+        <div class="tray" id="tray-vision">
+          <div class="tray-head"><div class="tray-dot"></div><span id="tray-vision-label">New Arrivals</span></div>
+          <div class="tray-strip" id="tray-vision-strip"></div>
+          <div class="tray-hint">Drag a pin up onto the canvas to place it</div>
+        </div>
+      </div>
+
+      <!-- ACTION BOARD -->
+      <div class="view" id="view-action">
+        <div class="topbar">
+          <div class="backbtn" onclick="showView('dashboard')">←</div>
+          <h2 id="action-title">Action Board</h2>
+          <button class="pill ghost" onclick="toggleTray('action')">Tray</button>
+        </div>
+        <div class="kanban" id="kanban-cols"></div>
+        <div class="tray" id="tray-action">
+          <div class="tray-head"><div class="tray-dot"></div><span id="tray-action-label">New Arrivals</span></div>
+          <div class="tray-strip" id="tray-action-strip"></div>
+          <div class="tray-hint">Drag a pin into a column</div>
+        </div>
+      </div>
+
+      <!-- UTILITY BOARD -->
+      <div class="view" id="view-utility" style="position:relative;">
+        <div class="topbar">
+          <div class="backbtn" onclick="showView('dashboard')">←</div>
+          <h2 id="utility-title">Utility Board</h2>
+          <div style="width:30px;"></div>
+        </div>
+        <div class="scroll"><div class="recipe-grid" id="recipe-grid"></div></div>
+        <button class="fab" onclick="openGrocery()">🛒 Grocery List <span id="groc-count">(0)</span></button>
+        <div class="grocery-sheet" id="grocery-sheet">
+          <h4>Grocery List <span class="pill ghost" style="cursor:pointer" onclick="closeGrocery()">Close</span></h4>
+          <div class="glist" id="glist"></div>
+        </div>
+      </div>
+
+      <!-- CATEGORIZE MODAL -->
+      <div class="modal-backdrop" id="cat-modal">
+        <div class="modal-sheet">
+          <h3 id="cat-board-name">Set up board</h3>
+          <p class="msub">Choose how this board should behave inside VisionLove</p>
+          <div class="opt a" onclick="assignCategory('vision')">
+            <div class="icon">🖼️</div>
+            <div class="otext"><div class="t">Vision Board</div><div class="d">Infinite canvas for moodboards & goals</div></div>
+          </div>
+          <div class="opt b" onclick="assignCategory('action')">
+            <div class="icon">📋</div>
+            <div class="otext"><div class="t">Action Board</div><div class="d">Kanban columns for DIY & project tracking</div></div>
+          </div>
+          <div class="opt c" onclick="assignCategory('utility')">
+            <div class="icon">🥕</div>
+            <div class="otext"><div class="t">Utility Board</div><div class="d">Recipe grid with ingredient parsing</div></div>
+          </div>
+          <div class="modal-cancel" onclick="closeModal()">Cancel</div>
+        </div>
+      </div>
+
+      <div class="toast" id="toast"></div>
+    </div>
+  </div>
+
+<script>
+/* ---------------- image helper ---------------- */
+function img(tag, n){ return `https://loremflickr.com/400/400/${tag}?lock=${n}`; }
+
+/* ---------------- data ---------------- */
+const boards = {
+  kitchen: {
+    name:'Kitchen Reno', category:'action',
+    cover:[img('kitchen,tile',10), img('kitchen,marble',11), img('kitchen,sink',12)],
+    pins:[
+      {id:'k1', title:'How to Tile a Herringbone Backsplash', img:img('kitchen,tile',13), col:'todo'},
+      {id:'k2', title:'Brass Faucet Inspiration', img:img('kitchen,faucet',14), col:'todo'},
+      {id:'k3', title:'Marble Countertop Ideas', img:img('kitchen,marble',15), col:'todo'},
+      {id:'k4', title:'Open Shelving DIY Guide', img:img('kitchen,shelf',16), col:'inprogress'},
+      {id:'k5', title:'Pendant Light Layout', img:img('kitchen,pendantlight',17), col:'done'},
+    ],
+    arrivals:[
+      {id:'ka1', title:'Terracotta Tile Floor', img:img('kitchen,terracotta',18)},
+      {id:'ka2', title:'Farmhouse Sink', img:img('kitchen,farmhouse',19)},
+      {id:'ka3', title:'Gold Cabinet Hardware', img:img('kitchen,cabinet',20)},
+    ],
+    arrivalsSeen:false
+  },
+  vegan: {
+    name:'Vegan Dinners', category:'utility',
+    cover:[img('vegan,bowl',30), img('vegan,curry',31), img('vegan,tacos',32)],
+    pins:[
+      {id:'v1', title:'Rainbow Buddha Bowl', img:img('vegan,bowl',33), ingredients:['quinoa','chickpeas','avocado','kale','tahini'], added:false},
+      {id:'v2', title:'Coconut Chickpea Curry', img:img('vegan,curry',34), ingredients:['coconut milk','chickpeas','bell pepper','curry paste','rice'], added:false},
+      {id:'v3', title:'Crispy Cauliflower Tacos', img:img('vegan,tacos',35), ingredients:['corn tortillas','cauliflower','black beans','lime','cilantro'], added:false},
+      {id:'v4', title:'Green Goddess Salad', img:img('vegan,salad',36), ingredients:['spinach','cucumber','avocado','pumpkin seeds','lemon'], added:false},
+    ],
+    arrivals:[], arrivalsSeen:true
+  },
+  goals: {
+    name:'2026 Goals', category:'vision',
+    cover:[img('travel,santorini',40), img('yoga,sunrise',41), img('journal,coffee',42)],
+    pins:[
+      {id:'g1', title:'Santorini Sunset', img:img('travel,santorini',43), x:20, y:24, r:-6},
+      {id:'g2', title:'Morning Yoga Flow', img:img('yoga,sunrise',44), x:190, y:60, r:4},
+      {id:'g3', title:'Cozy Reading Nook', img:img('reading,nook',45), x:40, y:230, r:3},
+      {id:'g4', title:'Gratitude Journal', img:img('journal,coffee',46), x:220, y:250, r:-3},
+      {id:'g5', title:'Strength Training', img:img('fitness,gym',47), x:110, y:420, r:6},
+      {id:'g6', title:'Minimalist Wardrobe Edit', img:img('fashion,minimal',48), x:340, y:150, r:-4},
+    ],
+    arrivals:[
+      {id:'ga1', title:'Home Studio Corner', img:img('desk,plants',49)},
+      {id:'ga2', title:'Weekend Trail Hike', img:img('hiking,mountain',50)},
+    ],
+    arrivalsSeen:false
+  },
+  decor: {
+    name:'Home Decor Finds', category:null,
+    cover:[img('livingroom,decor',70), img('candles,vase',71), img('rug,pattern',72)],
+    pins:[
+      {id:'d1', title:'Boucle Accent Chair', img:img('livingroom,chair',73), x:24,y:20,r:-5, col:'todo', ingredients:['boucle chair']},
+      {id:'d2', title:'Handwoven Jute Rug', img:img('rug,jute',74), x:190,y:50,r:3, col:'todo', ingredients:['jute rug']},
+      {id:'d3', title:'Ceramic Vase Trio', img:img('ceramic,vase',75), x:60,y:220,r:4, col:'todo', ingredients:['ceramic vases']},
+      {id:'d4', title:'Linen Curtains', img:img('linen,curtains',76), x:250,y:230,r:-3, col:'todo', ingredients:['linen curtains']},
+    ],
+    arrivals:[], arrivalsSeen:true
+  }
+};
+let pendingCategorizeId = null;
+let grocery = {}; // name -> checked bool
+
+/* ---------------- view switching ---------------- */
+function showView(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+id).classList.add('active');
+}
+function startSync(){
+  showView('syncing');
+  const labels = ['Pulling your boards…','Reading pin metadata…','Almost there…'];
+  let i=0;
+  const lbl = document.getElementById('sync-label');
+  const t = setInterval(()=>{ i++; if(i<labels.length){ lbl.textContent = labels[i]; } }, 500);
+  setTimeout(()=>{ clearInterval(t); renderDashboard(); showView('dashboard'); }, 1700);
+}
+
+/* ---------------- dashboard ---------------- */
+function catLabel(c){ return c==='vision'?'Vision Board':c==='action'?'Action Board':c==='utility'?'Utility Board':null; }
+function renderDashboard(){
+  const list = document.getElementById('board-list');
+  list.innerHTML='';
+  Object.entries(boards).forEach(([id,b])=>{
+    const div = document.createElement('div');
+    div.className='board-card';
+    div.onclick = ()=> b.category ? openBoard(id) : openCategorize(id);
+    const hasNew = b.arrivals.length && !b.arrivalsSeen;
+    div.innerHTML = `
+      ${hasNew ? `<div class="new-flag">+${b.arrivals.length} New</div>`:''}
+      <div class="cover-stack">${b.cover.map(c=>`<img src="${c}">`).join('')}</div>
+      <div class="board-info">
+        <div class="name">${b.name}</div>
+        <div class="meta">${b.pins.length} pins synced</div>
+        ${b.category ? `<span class="cat-badge ${b.category}">${catLabel(b.category)}</span>` : `<button class="setup-btn" onclick="event.stopPropagation();openCategorize('${id}')">Set up board →</button>`}
+      </div>`;
+    list.appendChild(div);
+  });
+}
+
+function openCategorize(id){
+  pendingCategorizeId = id;
+  document.getElementById('cat-board-name').textContent = 'Set up "'+boards[id].name+'"';
+  document.getElementById('cat-modal').classList.add('active');
+}
+function closeModal(){ document.getElementById('cat-modal').classList.remove('active'); }
+function assignCategory(cat){
+  if(!pendingCategorizeId) return;
+  boards[pendingCategorizeId].category = cat;
+  closeModal();
+  renderDashboard();
+  openBoard(pendingCategorizeId);
+}
+
+function openBoard(id){
+  const b = boards[id];
+  if(!b.category){ openCategorize(id); return; }
+  b.arrivalsSeen = true;
+  if(b.category==='vision'){ renderVision(id); showView('vision'); }
+  else if(b.category==='action'){ renderAction(id); showView('action'); }
+  else { renderUtility(id); showView('utility'); }
+}
+
+/* ---------------- toast ---------------- */
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+/* ---------------- simulate background sync ---------------- */
+function simulateSync(){
+  boards.kitchen.arrivalsSeen = false;
+  if(boards.kitchen.arrivals.length===0){
+    boards.kitchen.arrivals = [
+      {id:'ka1b', title:'Terracotta Tile Floor', img:img('kitchen,terracotta',60)},
+      {id:'ka2b', title:'Farmhouse Sink', img:img('kitchen,farmhouse',61)},
+      {id:'ka3b', title:'Gold Cabinet Hardware', img:img('kitchen,cabinet',62)},
+    ];
+  }
+  toast('3 new pins found on "Kitchen Reno"');
+  renderDashboard();
+}
+
+/* ---------------- Vision board ---------------- */
+let currentVisionBoard = null;
+function renderVision(id){
+  currentVisionBoard = id;
+  const b = boards[id];
+  document.getElementById('vision-title').textContent = b.name;
+  const canvas = document.getElementById('vision-canvas');
+  canvas.innerHTML='';
+  b.pins.forEach(p=>{
+    const el = document.createElement('div');
+    el.className='vpin';
+    el.style.left = p.x+'px'; el.style.top = p.y+'px';
+    el.style.transform = `rotate(${p.r}deg)`;
+    el.innerHTML = `<div class="tack"></div><img src="${p.img}"><div class="cap">${p.title}</div>`;
+    canvas.appendChild(el);
+    makeCanvasDraggable(el, p);
+  });
+  renderTrayVision();
+  document.getElementById('tray-vision').classList.remove('show');
+}
+function makeCanvasDraggable(el, p){
+  let sx,sy,ox,oy,dragging=false;
+  el.addEventListener('pointerdown', e=>{
+    dragging=true; el.setPointerCapture(e.pointerId);
+    sx=e.clientX; sy=e.clientY; ox=p.x; oy=p.y;
+    el.style.zIndex=99;
+  });
+  el.addEventListener('pointermove', e=>{
+    if(!dragging) return;
+    const dx=e.clientX-sx, dy=e.clientY-sy;
+    p.x = ox+dx; p.y = oy+dy;
+    el.style.left=p.x+'px'; el.style.top=p.y+'px';
+  });
+  el.addEventListener('pointerup', ()=>{ dragging=false; });
+  el.addEventListener('dblclick', ()=>{
+    p.r = (p.r===0)?-6:0;
+    el.style.transform = `rotate(${p.r}deg)`;
+  });
+}
+function renderTrayVision(){
+  const b = boards[currentVisionBoard];
+  const strip = document.getElementById('tray-vision-strip');
+  strip.innerHTML='';
+  document.getElementById('tray-vision-label').textContent = `New Arrivals (${b.arrivals.length})`;
+  b.arrivals.forEach(p=>{
+    const el = document.createElement('div');
+    el.className='tpin';
+    el.innerHTML = `<img src="${p.img}"><div class="tc">${p.title}</div>`;
+    strip.appendChild(el);
+    makeTrayDraggable(el, p, 'vision');
+  });
+  document.getElementById('tray-vision').classList.toggle('show', b.arrivals.length>0);
+}
+function makeTrayDraggable(el, p, mode){
+  let dragging=false, ghost=null;
+  el.addEventListener('pointerdown', e=>{
+    dragging=true; el.setPointerCapture(e.pointerId);
+    ghost = el.cloneNode(true);
+    ghost.style.position='fixed';
+    ghost.style.width=el.offsetWidth+'px';
+    ghost.style.zIndex=999; ghost.style.pointerEvents='none';
+    ghost.style.opacity='0.9';
+    document.body.appendChild(ghost);
+    moveGhost(e);
+  });
+  function moveGhost(e){
+    if(!ghost) return;
+    ghost.style.left=(e.clientX-39)+'px';
+    ghost.style.top=(e.clientY-32)+'px';
+  }
+  el.addEventListener('pointermove', e=>{ if(dragging) moveGhost(e); });
+  el.addEventListener('pointerup', e=>{
+    if(!dragging) return;
+    dragging=false;
+    const dropX=e.clientX, dropY=e.clientY;
+    if(ghost) ghost.remove();
+    if(mode==='vision'){
+      const wrap = document.querySelector('#view-vision .canvas-wrap');
+      const rect = wrap.getBoundingClientRect();
+      const trayRect = document.getElementById('tray-vision').getBoundingClientRect();
+      if(dropY < trayRect.top - 6){
+        const b = boards[currentVisionBoard];
+        const idx = b.arrivals.findIndex(a=>a.id===p.id);
+        if(idx>-1) b.arrivals.splice(idx,1);
+        const canvas = document.getElementById('vision-canvas');
+        const cRect = canvas.getBoundingClientRect();
+        const newPin = {id:p.id, title:p.title, img:p.img,
+          x: Math.max(4, dropX - cRect.left - 60 + wrap.scrollLeft),
+          y: Math.max(4, dropY - cRect.top - 60 + wrap.scrollTop),
+          r: (Math.random()*10-5).toFixed(1)*1 };
+        b.pins.push(newPin);
+        renderVision(currentVisionBoard);
+        toast('Placed "'+p.title+'" on the board');
+      }
+    } else if(mode==='action'){
+      const trayRect = document.getElementById('tray-action').getBoundingClientRect();
+      const cols = document.querySelectorAll('.kcol-body');
+      let target=null;
+      cols.forEach(c=>{
+        const r = c.getBoundingClientRect();
+        if(dropX>=r.left && dropX<=r.right && dropY>=r.top && dropY<=r.bottom) target=c;
+      });
+      if(target){
+        const b = boards[currentActionBoard];
+        const idx = b.arrivals.findIndex(a=>a.id===p.id);
+        if(idx>-1) b.arrivals.splice(idx,1);
+        b.pins.push({id:p.id, title:p.title, img:p.img, col: target.dataset.col});
+        renderAction(currentActionBoard);
+        toast('Added "'+p.title+'" to '+target.dataset.col);
+      }
+    }
+  });
+}
+function toggleTray(kind){
+  const t = document.getElementById('tray-'+kind);
+  t.classList.toggle('show');
+}
+
+/* ---------------- Action board (Kanban) ---------------- */
+let currentActionBoard = null;
+const COLS = [['todo','To Do'],['inprogress','In Progress'],['done','Done']];
+function renderAction(id){
+  currentActionBoard = id;
+  const b = boards[id];
+  document.getElementById('action-title').textContent = b.name;
+  const wrap = document.getElementById('kanban-cols');
+  wrap.innerHTML='';
+  COLS.forEach(([key,label])=>{
+    const items = b.pins.filter(p=>p.col===key);
+    const col = document.createElement('div');
+    col.className='kcol';
+    col.innerHTML = `<h4>${label} <span class="count">${items.length}</span></h4><div class="kcol-body" data-col="${key}"></div>`;
+    wrap.appendChild(col);
+    const body = col.querySelector('.kcol-body');
+    items.forEach(p=>{
+      const card = document.createElement('div');
+      card.className='kcard';
+      card.draggable = true;
+      card.dataset.id = p.id;
+      card.innerHTML = `<img src="${p.img}"><div class="kt">${p.title}</div>`;
+      card.addEventListener('dragstart', e=>{ e.dataTransfer.setData('text/plain', p.id); });
+      body.appendChild(card);
+    });
+    body.addEventListener('dragover', e=>{ e.preventDefault(); body.classList.add('dragover'); });
+    body.addEventListener('dragleave', ()=> body.classList.remove('dragover'));
+    body.addEventListener('drop', e=>{
+      e.preventDefault(); body.classList.remove('dragover');
+      const pid = e.dataTransfer.getData('text/plain');
+      const pin = b.pins.find(pp=>pp.id===pid);
+      if(pin){ pin.col = key; renderAction(id); }
+    });
+  });
+  renderTrayAction();
+  document.getElementById('tray-action').classList.remove('show');
+}
+function renderTrayAction(){
+  const b = boards[currentActionBoard];
+  const strip = document.getElementById('tray-action-strip');
+  strip.innerHTML='';
+  document.getElementById('tray-action-label').textContent = `New Arrivals (${b.arrivals.length})`;
+  b.arrivals.forEach(p=>{
+    const el = document.createElement('div');
+    el.className='tpin';
+    el.innerHTML = `<img src="${p.img}"><div class="tc">${p.title}</div>`;
+    strip.appendChild(el);
+    makeTrayDraggable(el, p, 'action');
+  });
+  document.getElementById('tray-action').classList.toggle('show', b.arrivals.length>0);
+}
+
+/* ---------------- Utility board ---------------- */
+let currentUtilityBoard = null;
+function renderUtility(id){
+  currentUtilityBoard = id;
+  const b = boards[id];
+  document.getElementById('utility-title').textContent = b.name;
+  const grid = document.getElementById('recipe-grid');
+  grid.innerHTML='';
+  b.pins.forEach(p=>{
+    const card = document.createElement('div');
+    card.className='rcard';
+    card.innerHTML = `
+      <img src="${p.img}">
+      <div class="rt">${p.title}</div>
+      <div class="ing">${p.ingredients.join(' · ')}</div>
+      <button class="addbtn ${p.added?'added':''}" onclick="addToGrocery('${p.id}')">${p.added?'Added ✓':'Add to Grocery List'}</button>
+    `;
+    grid.appendChild(card);
+  });
+  updateGroceryCount();
+}
+function addToGrocery(pid){
+  const b = boards[currentUtilityBoard];
+  const p = b.pins.find(pp=>pp.id===pid);
+  if(!p || p.added) return;
+  p.added = true;
+  p.ingredients.forEach(ing=>{ if(!(ing in grocery)) grocery[ing]=false; });
+  renderUtility(currentUtilityBoard);
+  toast('Ingredients added to grocery list');
+}
+function updateGroceryCount(){
+  document.getElementById('groc-count').textContent = '('+Object.keys(grocery).length+')';
+}
+function openGrocery(){
+  renderGrocery();
+  document.getElementById('grocery-sheet').classList.add('open');
+}
+function closeGrocery(){ document.getElementById('grocery-sheet').classList.remove('open'); }
+function renderGrocery(){
+  const list = document.getElementById('glist');
+  const keys = Object.keys(grocery);
+  if(keys.length===0){ list.innerHTML = '<div class="empty-groc">No ingredients yet — add a recipe pin to get started.</div>'; return; }
+  list.innerHTML='';
+  keys.forEach(k=>{
+    const row = document.createElement('div');
+    row.className = 'gitem'+(grocery[k]?' checked':'');
+    row.innerHTML = `<input type="checkbox" ${grocery[k]?'checked':''} onchange="toggleGrocery('${k}')"><span>${k}</span>`;
+    list.appendChild(row);
+  });
+}
+function toggleGrocery(k){ grocery[k] = !grocery[k]; renderGrocery(); }
+
+/* ---------------- init ---------------- */
+renderDashboard();
+</script>
+</body>
+</html>
